@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  
+  <script language=javascript runat=server>
+Platform.Load("core", "1");
+try
+{
+</script>
+
+ %%[
+  SET @ID = GUID()
+  SET @EmailAddress = RequestParameter("Email")
+  SET @Source = RequestParameter("Source")
+  IF EMPTY(@Source) THEN SET @EmailAddress = "noemail@noemail.com" SET @Source = "Unknown" ELSE ENDIF
+  SET @SubmittedDate = SystemDateToLocalDate(NOW())
+  SET @Result = UPSERTDATA("RR-2017-ContentHub", 1, "EmailAddress", @EmailAddress, "ID", @ID, "SubmittedDate", @SubmittedDate, "Source", @Source) 
+  REDIRECTTO(CONCAT("https://monash.contentgrowthstack.io/?cm-qkdwi-qkdwi=", @EmailAddress))
+  ]%%
+<script runat="server" language="javascript">
+} catch(err) { 
+  var e = Stringify(err.description);
+ Variable.SetValue("ErrorMessage",e);
+} 
+ </script>
+  </head>
+<body>
+  %%=v(@ErrorMessage)=%%
+</body>
+ 
+
+</html>
+  
+  
+
